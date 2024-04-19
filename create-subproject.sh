@@ -15,6 +15,6 @@ cd "$directory"
 
 mkdir include src
 
-touch src/"$(echo "$directory" | tr '[:upper:]' '[:lower:]').c"
+cp ../assets/license_header.h src/"$(echo "$directory" | tr '[:upper:]' '[:lower:]').c"
 
 cp ../Makefile.template Makefile
