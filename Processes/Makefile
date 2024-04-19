@@ -1,4 +1,4 @@
-INCLUDE_DIR = $(PWD)/include
+INCLUDE_DIR = $(shell pwd)/include
 OBJ_DIR     = obj
 SRC_DIR     = src
 TARGETS     = processes
