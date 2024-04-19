@@ -131,12 +131,12 @@ Matrix matrixMultiplication(const Matrix matrixA, const Matrix matrixB)
 
 	for (size_t i = 0; i < NUM_THREADS; ++i) {
 		threadArgs[i] = (ThreadArgs){
-		    .matrixA   = matrixA,
-		    .matrixB   = matrixB,
-		    .matrixC   = &matrixC,
-		    .start_row = i * rowsPerThread,
-		    .end_row   = (i == NUM_THREADS - 1) ? matrixA.rows
-		                                        : (i + 1) * rowsPerThread,
+		    .matrixA  = matrixA,
+		    .matrixB  = matrixB,
+		    .matrixC  = &matrixC,
+		    .startRow = i * rowsPerThread,
+		    .endRow   = (i == NUM_THREADS - 1) ? matrixA.rows
+		                                       : (i + 1) * rowsPerThread,
 		};
 
 		pthread_create(&threads[i],
@@ -173,8 +173,8 @@ void *matrixMultiplicationThread(void *argument)
 
 	const Matrix matrixA  = arguments->matrixA;
 	const Matrix matrixB  = arguments->matrixB;
-	const size_t startRow = arguments->start_row;
-	const size_t endRow   = arguments->end_row;
+	const size_t startRow = arguments->startRow;
+	const size_t endRow   = arguments->endRow;
 
 	Matrix *matrixC = arguments->matrixC;
 

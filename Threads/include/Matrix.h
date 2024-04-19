@@ -35,8 +35,8 @@ typedef struct {
 	Matrix matrixA;
 	Matrix matrixB;
 	Matrix *matrixC;
-	size_t start_row;
-	size_t end_row;
+	size_t startRow;
+	size_t endRow;
 } ThreadArgs;
 
 #define MATRIX_THREADED 1
@@ -64,6 +64,7 @@ typedef struct {
 #define MIN -10
 #define MAX 10
 
+// NOLINTNEXTLINE(readability-identifier-naming)
 #define for2(VAR_ROW,                                                          \
              VAR_ROW_START,                                                    \
              VAR_ROW_END,                                                      \
