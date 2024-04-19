@@ -42,7 +42,20 @@ int main(void)
 	generateRandomMatrix(&matrixA, MIN, MAX);
 	generateRandomMatrix(&matrixB, MIN, MAX);
 
+	struct timespec start, end;
+
+	const clock_t startClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &start);
+
 	matrixC = matrixMultiplication(matrixA, matrixB);
+
+	clock_gettime(CLOCK_MONOTONIC, &end);
+
+	const double totalClock = ((double) (clock() - startClock)) / CLOCKS_PER_SEC;
+	const double totalTime = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+
+	printf("Clock Time taken for matrix multiplication: %f seconds\n", totalClock);
+	printf("Real Time taken for matrix multiplication:  %f seconds\n", totalTime);
 
 	if (M <= 10 && K <= 10 && N <= 10) {
 		printf("A: ");
