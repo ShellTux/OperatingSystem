@@ -95,3 +95,7 @@ warning:
 		&& printf '%s\n' 'Please Try compiling by making sure the full path to this Makefile does not contain spaces.' \
 		&& exit 1 \
 		|| true
+
+run: warning
+run: $(TARGETS)
+	$(<:%=./% ;)
