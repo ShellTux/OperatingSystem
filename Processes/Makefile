@@ -97,3 +97,12 @@ warning:
 run: warning
 run: $(TARGETS)
 	$(<:%=./% ;)
+
+help:
+	man \
+		fork.2 \
+		getpid.3p \
+		getppid.3p \
+		pid_t.3type \
+		wait.2 \
+		wait.3p
