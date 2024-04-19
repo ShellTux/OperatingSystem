@@ -100,12 +100,17 @@ run: $(TARGETS)
 
 help:
 	man \
+		pthread_create.3 \
+		pthread_exit.3 \
 		pthread.h.0p \
-		pthreads.7 \
-		sem_overview.7 \
-		sem_init.3 \
+		pthread_join.3 \
+		pthread_mutex_destroy.3 \
 		pthread_mutex_init.3 \
 		pthread_mutex_init.3p \
-		pthread_create.3 \
-		pthread_join.3 \
-		sem_destroy.3
+		pthread_mutex_lock.3 \
+		pthreads.7 \
+		sem_destroy.3 \
+		sem_init.3 \
+		sem_overview.7 \
+		sem_post.3 \
+		sem_wait.3
