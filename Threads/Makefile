@@ -97,3 +97,11 @@ warning:
 run: warning
 run: $(TARGETS)
 	$(<:%=./% ;)
+
+help:
+	man \
+		pthread.h.0p \
+		pthreads.7 \
+		pthread_create.3 \
+		pthread_join.3 \
+		pthread_exit.3
