@@ -35,7 +35,7 @@ int main(void)
 
 	for (int i = 0; i < N_FORKS; ++i) {
 		int sleepTime = 1 + rand() % 10;
-		int pid = fork();
+		int pid       = fork();
 
 		if (pid == -1) {
 			perror("Fork Error: ");
@@ -43,11 +43,17 @@ int main(void)
 		} else if (pid == 0) {
 			// NOTE: CHILD CODE
 			sleep(sleepTime);
-			printf("Child ID: %d, Child PID: %d, Child PPID: %d\n", pid, getpid(), getppid());
+			printf("Child ID: %d, Child PID: %d, Child PPID: %d\n",
+			       pid,
+			       getpid(),
+			       getppid());
 			exit(EXIT_SUCCESS);
 		} else {
 			// NOTE: MAIN CODE
-			printf("New Process generated with PID: %d, with sleep time of %d\n", pid, sleepTime);
+			printf("New Process generated with PID: %d, with sleep "
+			       "time of %d\n",
+			       pid,
+			       sleepTime);
 		}
 	}
 

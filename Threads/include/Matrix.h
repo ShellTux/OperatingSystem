@@ -40,56 +40,53 @@ typedef struct {
 } ThreadArgs;
 
 #define MATRIX_THREADED 1
-#define NUM_THREADS 4
+#define NUM_THREADS     4
 
 #define BENCHMARK 2
 #if BENCHMARK == -1
-#define M 2
-#define K 3
-#define N 2
+	#define M 2
+	#define K 3
+	#define N 2
 #elif BENCHMARK == 0
-#define M 7
-#define K 5
-#define N 9
+	#define M 7
+	#define K 5
+	#define N 9
 #elif BENCHMARK == 1
-#define M 70
-#define K 50
-#define N 90
+	#define M 70
+	#define K 50
+	#define N 90
 #else
-#define M 1700
-#define K 1500
-#define N 1900
+	#define M 1700
+	#define K 1500
+	#define N 1900
 #endif
 
 #define MIN -10
 #define MAX 10
 
-#define for2(VAR_ROW, VAR_ROW_START, VAR_ROW_END, VAR_COL, VAR_COL_START,      \
+#define for2(VAR_ROW,                                                          \
+             VAR_ROW_START,                                                    \
+             VAR_ROW_END,                                                      \
+             VAR_COL,                                                          \
+             VAR_COL_START,                                                    \
              VAR_COL_END)                                                      \
-	     for (size_t VAR_ROW = VAR_ROW_START; VAR_ROW < VAR_ROW_END; ++VAR_ROW) \
-	     for (size_t VAR_COL = VAR_COL_START; VAR_COL < VAR_COL_END; ++VAR_COL)
+	for (size_t VAR_ROW = VAR_ROW_START; VAR_ROW < VAR_ROW_END; ++VAR_ROW) \
+		for (size_t VAR_COL = VAR_COL_START; VAR_COL < VAR_COL_END;    \
+		     ++VAR_COL)
 
 Matrix createMatrix(const size_t rows, const size_t cols);
 void destroyMatrix(Matrix *matrix);
-void matrixSet(
-		Matrix *matrix,
-		const size_t row,
-		const size_t col,
-		const int value
-	      );
+void matrixSet(Matrix *matrix,
+               const size_t row,
+               const size_t col,
+               const int value);
 int matrixGet(const Matrix matrix, const size_t row, const size_t col);
-void generateRandomMatrix(
-		Matrix *matrix,
-		const int min,
-		const int max
-		);
+void generateRandomMatrix(Matrix *matrix, const int min, const int max);
 void printMatrix(const Matrix matrix);
-int matrixDotProduct(
-		const Matrix matrixA,
-		const Matrix matrixB,
-		const size_t row,
-		const size_t col
-		);
+int matrixDotProduct(const Matrix matrixA,
+                     const Matrix matrixB,
+                     const size_t row,
+                     const size_t col);
 Matrix matrixMultiplication(const Matrix matrixA, const Matrix matrixB);
 void *matrixMultiplicationThread(void *argument);
 
