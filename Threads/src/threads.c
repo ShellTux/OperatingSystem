@@ -21,51 +21,39 @@
  ***************************************************************************/
 
 #include "threads.h"
+#include "Matrix.h"
 
-#include <bits/pthreadtypes.h>
-#include <pthread.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>
+
+Matrix matrixA = {0};
+Matrix matrixB = {0};
+Matrix matrixC = {0};
 
 int main(void)
 {
 	srand(time(NULL));
 
-	Thread threads[N_THREADS] = {0};
-	for (int i = 0; i < N_THREADS; ++i) {
-		threads[i].id = i + 1;
+	matrixA = createMatrix(M, K);
+	matrixB = createMatrix(K, N);
 
-		srand(i);
-		threads[i].workTime = 1 + rand() % MAX_SLEEP;
+	generateRandomMatrix(&matrixA, MIN, MAX);
+	generateRandomMatrix(&matrixB, MIN, MAX);
 
-		pthread_create(
-				&threads[i].threadID,
-				NULL,
-				threadFunction,
-				&threads[i]
-			      );
+	matrixC = matrixMultiplication(matrixA, matrixB);
+
+	if (M <= 10 && K <= 10 && N <= 10) {
+		printf("A: ");
+		printMatrix(matrixA);
+
+		printf("B: ");
+		printMatrix(matrixB);
+
+		printf("C = A * B = ");
+		printMatrix(matrixC);
 	}
-
-	for (int i = 0; i < N_THREADS; ++i) {
-		pthread_join(threads[i].threadID, NULL);
-	}
-
-	pthread_exit(NULL);
 
 	return 0;
-}
-
-void *threadFunction(void *argument)
-{
-	Thread thread = *(Thread *) argument;
-
-	printf("[%02zu] Thread, start working for %zu seconds...\n", thread.id, thread.workTime);
-
-	sleep(thread.workTime);
-
-	printf("[%02zu] Thread, end working...\n", thread.id);
-
-	pthread_exit(NULL);
 }

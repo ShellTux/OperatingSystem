@@ -26,16 +26,9 @@
 #include <pthread.h>
 #include <stddef.h>
 
-#define N_THREADS 10
-#define COMPUTE_PER_THREAD 10
-#define MAX_SLEEP 10
-
 typedef struct {
 	size_t id;
 	pthread_t threadID;
-	size_t workTime;
 } Thread;
-
-void *threadFunction(void *argument);
 
 #endif // !THREADS_H

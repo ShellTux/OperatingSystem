@@ -34,7 +34,7 @@ $(OBJ_DIR)/%.c.o: %.c $(HEADERS)
 	mkdir --parents `dirname "$@"`
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-SOURCES = threads
+SOURCES = threads Matrix
 threads: $(SOURCES:%=$(OBJ_DIR)/$(SRC_DIR)/%.c.o)
 
 $(TARGETS): MAKEFLAGS += --jobs=4 --output-sync=target
