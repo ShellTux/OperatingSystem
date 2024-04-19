@@ -36,7 +36,7 @@ void generateRandomMatrix(
 		return;
 	}
 
-	for2 (i, j, matrix->rows, matrix->cols) {
+	for2 (i, 0, matrix->rows, j, 0, matrix->cols) {
 		matrixSet(matrix, i, j, rand() % (max - min) + min);
 	}
 }
@@ -48,7 +48,7 @@ void printMatrix(const Matrix matrix)
 	}
 
 	printf("[");
-	for2 (i, j, matrix.rows, matrix.cols) {
+	for2 (i, 0, matrix.rows, j, 0, matrix.cols) {
 		if (j == 0) {
 			printf("\n  [");
 		} else if (j != 0) {
@@ -125,10 +125,34 @@ Matrix matrixMultiplication(const Matrix matrixA, const Matrix matrixB)
 		return matrixC;
 	}
 
-	for2 (i, j, matrixA.rows, matrixB.cols) {
+#if MATRIX_THREADED == 0
+	for2 (i, 0, matrixA.rows, j, 0, matrixB.cols) {
 		const int sum = matrixDotProduct(matrixA, matrixB, i, j);
 		matrixSet(&matrixC, i, j, sum);
 	}
+#else
+	pthread_t threads[NUM_THREADS];
+	ThreadArgs threadArgs[NUM_THREADS];
+	size_t rowsPerThread = matrixA.rows / NUM_THREADS;
+
+	for (size_t i = 0; i < NUM_THREADS; ++i) {
+		threadArgs[i] = (ThreadArgs) {
+			.matrixA = matrixA,
+			.matrixB = matrixB,
+			.matrixC = &matrixC,
+			.start_row = i * rowsPerThread,
+			.end_row = (i == NUM_THREADS - 1)
+				? matrixA.rows
+				: (i + 1) * rowsPerThread,
+		};
+
+		pthread_create(&threads[i], NULL, matrixMultiplicationThread, &threadArgs[i]);
+	}
+
+	for (int i = 0; i < NUM_THREADS; ++i) {
+		pthread_join(threads[i], NULL);
+	}
+#endif
 
 	return matrixC;
 }
@@ -147,4 +171,23 @@ int matrixDotProduct(
 	}
 
 	return sum;
+}
+
+void *matrixMultiplicationThread(void *argument)
+{
+	ThreadArgs *arguments = (ThreadArgs *) argument;
+
+	const Matrix matrixA = arguments->matrixA;
+	const Matrix matrixB = arguments->matrixB;
+	const size_t startRow = arguments->start_row;
+	const size_t endRow = arguments->end_row;
+
+	Matrix *matrixC = arguments->matrixC;
+
+	for2(i, startRow, endRow, j, 0, matrixB.cols) {
+		const int sum = matrixDotProduct(matrixA, matrixB, i, j);
+		matrixSet(matrixC, i, j, sum);
+	}
+
+	pthread_exit(NULL);
 }

@@ -31,7 +31,18 @@ typedef struct {
 	int *data;
 } Matrix;
 
-#define BENCHMARK 0
+typedef struct {
+	Matrix matrixA;
+	Matrix matrixB;
+	Matrix *matrixC;
+	size_t start_row;
+	size_t end_row;
+} ThreadArgs;
+
+#define MATRIX_THREADED 1
+#define NUM_THREADS 4
+
+#define BENCHMARK 2
 #if BENCHMARK == -1
 #define M 2
 #define K 3
@@ -41,15 +52,22 @@ typedef struct {
 #define K 5
 #define N 9
 #elif BENCHMARK == 1
+#define M 70
+#define K 50
+#define N 90
 #else
+#define M 1700
+#define K 1500
+#define N 1900
 #endif
 
 #define MIN -10
 #define MAX 10
 
-#define for2(VAR_ROW, VAR_COL, ROWS, COLS) \
-	for (size_t VAR_ROW = 0; VAR_ROW < ROWS; ++VAR_ROW) \
-	for (size_t VAR_COL = 0; VAR_COL < COLS; ++VAR_COL) 
+#define for2(VAR_ROW, VAR_ROW_START, VAR_ROW_END, VAR_COL, VAR_COL_START,      \
+             VAR_COL_END)                                                      \
+	     for (size_t VAR_ROW = VAR_ROW_START; VAR_ROW < VAR_ROW_END; ++VAR_ROW) \
+	     for (size_t VAR_COL = VAR_COL_START; VAR_COL < VAR_COL_END; ++VAR_COL)
 
 Matrix createMatrix(const size_t rows, const size_t cols);
 void destroyMatrix(Matrix *matrix);
@@ -73,5 +91,6 @@ int matrixDotProduct(
 		const size_t col
 		);
 Matrix matrixMultiplication(const Matrix matrixA, const Matrix matrixB);
+void *matrixMultiplicationThread(void *argument);
 
 #endif // !THREADS_MATRIX_H

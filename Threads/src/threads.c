@@ -20,9 +20,9 @@
  *
  ***************************************************************************/
 
-#include "threads.h"
 #include "Matrix.h"
 
+#include <bits/time.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
