@@ -38,7 +38,8 @@ int main(void)
 {
 	srand(time(NULL));
 
-	sharedMemoryID = shmget(IPC_PRIVATE, sizeof(*sharedVariable), IPC_CREAT | 0600);
+	sharedMemoryID
+	    = shmget(IPC_PRIVATE, sizeof(*sharedVariable), IPC_CREAT | 0600);
 	if (sharedMemoryID == -1) {
 		perror("IPC shmget: ");
 		exit(EXIT_FAILURE);
@@ -46,12 +47,22 @@ int main(void)
 
 	printf("[INFO]: Creating %d new processes\n", N_FORKS);
 	for (int i = 0; i < N_FORKS; ++i) {
-		const unsigned int sleepTime = RANDINT(1, 10);
+		const unsigned int sleepTime = RANDINT(100, 1000) * 1000;
 		if (fork() == 0) {
 			child(sleepTime);
 			exit(EXIT_SUCCESS);
 		}
 	}
+
+	if ((sharedVariable = shmat(sharedMemoryID, NULL, SHM_RDONLY))
+	    == (void *) -1) {
+		perror("IPC ERROR shmat: ");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("sharedVariable = %d\n", *sharedVariable);
+
+	shmdt(sharedVariable);
 
 	shmctl(sharedMemoryID, IPC_RMID, NULL);
 
@@ -63,6 +74,13 @@ int main(void)
 
 void child(const unsigned int sleepTime)
 {
-	/* shmat(sharedMemoryID, ) */
+	if ((sharedVariable = shmat(sharedMemoryID, NULL, 0)) == (void *) -1) {
+		perror("IPC shmat: ");
+		exit(EXIT_FAILURE);
+	}
+
+	(*sharedVariable)++;
+	usleep(sleepTime);
+
 	exit(EXIT_SUCCESS);
 }
