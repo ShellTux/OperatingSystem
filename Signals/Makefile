@@ -106,4 +106,6 @@ help:
 		pause.2 \
 		pause.3p \
 		sigsetops.3 \
-		sigprocmask.2
+		sigprocmask.2 \
+		kill.2 \
+		kill.3
