@@ -97,3 +97,13 @@ warning:
 run: warning
 run: $(TARGETS)
 	$(<:%=./% ;)
+
+help:
+	man \
+		signal.h.0p \
+		signal.2 \
+		signal.3p \
+		pause.2 \
+		pause.3p \
+		sigsetops.3 \
+		sigprocmask.2
