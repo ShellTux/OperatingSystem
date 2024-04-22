@@ -36,8 +36,10 @@
 int sharedMemoryID;
 int *sharedVariable = NULL;
 
-#if ENABLE_SEMAPHORE
-sem_t *mutex;
+#if SEMAPHORE == NAMED_SEMAPHORE
+sem_t *namedSemaphore = NULL;
+#elif SEMAPHORE == UNNAMED_SEMAPHORE
+sem_t unnamedSemaphore;
 #endif
 
 int main(void)
@@ -51,14 +53,30 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-#if ENABLE_SEMAPHORE
+#if SEMAPHORE == NAMED_SEMAPHORE
 	sem_unlink(MUTEX);
-	mutex = sem_open(MUTEX, O_CREAT | O_EXCL, 0600, 1);
-	if (mutex == SEM_FAILED) {
+	namedSemaphore = sem_open(MUTEX, O_CREAT | O_EXCL, 0600, 1);
+	if (namedSemaphore == SEM_FAILED) {
+		perror("IPC ERROR sem_open: ");
+		exit(EXIT_FAILURE);
+	}
+#elif SEMAPHORE == UNNAMED_SEMAPHORE
+	if (sem_init(&unnamedSemaphore, 1, 1) == -1) {
 		perror("IPC ERROR sem_init: ");
 		exit(EXIT_FAILURE);
 	}
+
+	sem_post(&unnamedSemaphore);
 #endif
+
+	if ((sharedVariable = shmat(sharedMemoryID, NULL, 0)) == (void *) -1) {
+		perror("IPC ERROR shmat: ");
+		exit(EXIT_FAILURE);
+	}
+
+	*sharedVariable = 0;
+
+	shmdt(sharedVariable);
 
 	printf("[INFO]: Creating %d new processes\n", N_FORKS);
 	for (int i = 0; i < N_FORKS; ++i) {
@@ -85,9 +103,11 @@ int main(void)
 
 	printf("sharedVariable = %d\n", *sharedVariable);
 
-#if ENABLE_SEMAPHORE
-	sem_close(mutex);
+#if SEMAPHORE == NAMED_SEMAPHORE
+	sem_close(namedSemaphore);
 	sem_unlink(MUTEX);
+#elif SEMAPHORE == UNNAMED_SEMAPHORE
+	sem_destroy(&unnamedSemaphore);
 #endif
 
 	shmdt(sharedVariable);
@@ -103,11 +123,16 @@ void worker(const unsigned int sleepTime)
 		exit(EXIT_FAILURE);
 	}
 
-#if ENABLE_SEMAPHORE
+#if SEMAPHORE == NAMED_SEMAPHORE
 	(void) sleepTime;
-	sem_wait(mutex);
+	sem_wait(namedSemaphore);
 	(*sharedVariable)++;
-	sem_post(mutex);
+	sem_post(namedSemaphore);
+#elif SEMAPHORE == UNNAMED_SEMAPHORE
+	(void) sleepTime;
+	sem_wait(&unnamedSemaphore);
+	(*sharedVariable)++;
+	sem_post(&unnamedSemaphore);
 #else
 	usleep(sleepTime);
 	(*sharedVariable)++;

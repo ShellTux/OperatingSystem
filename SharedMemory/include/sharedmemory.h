@@ -25,7 +25,10 @@
 
 #define N_FORKS 3000
 #define MUTEX "MUTEX"
-#define ENABLE_SEMAPHORE 1
+
+#define NAMED_SEMAPHORE 1
+#define UNNAMED_SEMAPHORE 2
+#define SEMAPHORE NAMED_SEMAPHORE
 
 #define RANDINT(MIN, MAX) (rand() % (MAX - MIN) + MIN)
 
