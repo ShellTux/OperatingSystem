@@ -23,20 +23,12 @@
  *
  ***************************************************************************/
 
-#define N_FORKS 10
+#define N_FORKS 3000
+#define MUTEX "MUTEX"
+#define ENABLE_SEMAPHORE 1
 
-#define MICRO2MILI(MICRO) (MICRO * 1000)
 #define RANDINT(MIN, MAX) (rand() % (MAX - MIN) + MIN)
 
-#define LOREM                                                                  \
-	"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do "    \
-	"eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim " \
-	"ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "  \
-	"aliquip ex ea commodo consequat. Duis aute irure dolor in "           \
-	"reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla " \
-	"pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "   \
-	"culpa qui officia deserunt mollit anim id est laborum."
-
-void child(const unsigned int sleepTime);
+void worker(const unsigned int sleepTime);
 
 #endif // !SHARED_MEMORY_H
